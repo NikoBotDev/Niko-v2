@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --ignore-watch node_modules src/bot.ts"
+    "dev": "ts-node-dev --ignore-watch node_modules -r tsconfig-paths/register src/bot.ts"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +13,7 @@
     "@types/node": "12.12.6",
     "ts-node": "^8.10.2",
     "ts-node-dev": "^1.0.0-pre.44",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^3.9.5"
   },
   "dependencies": {
