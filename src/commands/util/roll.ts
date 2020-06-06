@@ -29,11 +29,11 @@ export default class RollCommand extends Command {
     });
   }
 
-  exec(msg: Message, { num }: { num: number }) {
+  exec(message: Message, { num }: { num: number }) {
     num = Math.floor(Math.random() * num) + 1;
     const embed = new MessageEmbed()
       .setColor(colors.bot)
       .setDescription(`You rolled ${num}`);
-    return msg.util!.send('', embed);
+    return message.util!.send('', embed);
   }
 }
