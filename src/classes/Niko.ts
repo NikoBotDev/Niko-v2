@@ -22,7 +22,9 @@ class Niko extends AkairoClient {
     });
 
     this.commandHandler = new CommandHandler(this, {
-      prefix: '<',
+      prefix: (message) => {
+        return '<';
+      },
       commandUtil: true,
       defaultCooldown: 2e3,
       directory: path.resolve(__dirname, '..', 'commands'),
