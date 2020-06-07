@@ -22,6 +22,7 @@ export default class AvatarCommand extends Command {
           description: 'User to fetch avatar',
           prompt: {
             start: 'What user would you like to get the avatar?\n',
+            optional: true,
           },
         },
       ],
