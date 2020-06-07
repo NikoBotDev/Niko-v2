@@ -35,14 +35,14 @@ export default class WhosPlayingCommand extends Command {
       return message.channel.send(`No one is playing ${game} right now`);
     }
 
-    const stringArray = members?.map(
+    const stringArray = members.map(
       (member) => `**${member.displayName}${member.user.tag}**`
     );
     const embed = new MessageEmbed()
       .setColor(colors.success)
       .setAuthor("Who's playing", message.guild?.iconURL() as string)
       .setDescription(stringArray.join('\n'))
-      .setFooter(message.author!.tag, message.author.avatarURL() as string)
+      .setFooter(message.author.tag, message.author.avatarURL() as string)
       .setTimestamp();
     return message.channel.send(embed);
   }
@@ -52,7 +52,6 @@ export default class WhosPlayingCommand extends Command {
       member.presence.activities.length > 0 &&
       member.presence.activities[0].name.toLowerCase() === game.toLowerCase()
     ) {
-      [0];
       return true;
     }
     return false;
