@@ -7,7 +7,9 @@ import {
 import path from 'path';
 import * as Sentry from '@sentry/node';
 
-const { SENTRY_DSN, TOKEN, NODE_ENV } = process.env;
+import sentryConfig from '~/config/sentry';
+
+const { TOKEN, NODE_ENV } = process.env;
 
 class Niko extends AkairoClient {
   public commandHandler: CommandHandler;
@@ -35,9 +37,7 @@ class Niko extends AkairoClient {
     });
 
     if (NODE_ENV !== 'development') {
-      Sentry.init({
-        dsn: SENTRY_DSN,
-      });
+      Sentry.init(sentryConfig);
     }
   }
 
