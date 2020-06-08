@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Typescript Server",
+      "type": "node",
+      "request": "attach",
+      "protocol": "inspector",
+      "port": 9229,
+      "restart": true,
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "."
+    }
+  ]
+}
