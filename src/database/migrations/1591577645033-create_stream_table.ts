@@ -16,7 +16,7 @@ export class createStreamTable1591577645033 implements MigrationInterface {
           },
           {
             name: 'message',
-            type: 'varchar',
+            type: 'text',
             isNullable: true,
           },
           {
