@@ -5,6 +5,8 @@ import Database from './database';
 
 const client = new Niko();
 
-Database.init();
+(async function () {
+  await Database.init();
 
-client.start();
+  await client.start();
+})();
