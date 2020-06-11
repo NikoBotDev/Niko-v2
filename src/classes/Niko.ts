@@ -58,6 +58,12 @@ class Niko extends AkairoClient {
 
     this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 
+    this.listenerHandler.setEmitters({
+      commandHandler: this.commandHandler,
+      inhibitorHandler: this.inhibitorHandler,
+      listenerHandler: this.listenerHandler
+    });
+
     this.listenerHandler.loadAll();
 
     this.inhibitorHandler.loadAll();
