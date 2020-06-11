@@ -29,6 +29,9 @@ export class Tag extends BaseEntity {
   @Column()
   userId: string;
 
+  @Column()
+  usages: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
