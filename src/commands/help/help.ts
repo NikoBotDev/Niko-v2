@@ -45,11 +45,11 @@ export default class HelpCommand extends Command {
         .setDescription(
           `Hello ${message.author.username}, i'm ${
             this.client.user!.username
-          } here is some links that might help you, check them below!\nIf you have any questions or want to report a bug, please enter in the [Support Server](https://www.google.com.br/) you'll be very welcome in there! If you want to add me in your server click in the link below! ${url}\n`
+          } here is some links that might help you, check them below!\nIf you have any questions or want to report a bug, please enter in the [Support Server](https://www.google.com.br/) you'll be very welcome in there! If you want to add me in your server click in the link below! ${url}\n`,
         )
         .setFooter(
           this.client.user!.username,
-          this.client.user!.displayAvatarURL()
+          this.client.user!.displayAvatarURL(),
         );
       return message.channel.send(embed);
     }
@@ -59,7 +59,7 @@ export default class HelpCommand extends Command {
       .setTitle(
         `\`${command.aliases[0]} ${
           command.description.usage ? command.description.usage : ''
-        }\``
+        }\``,
       )
       .addField('Description', command.description.content || '\u200b');
 
@@ -69,9 +69,9 @@ export default class HelpCommand extends Command {
       embed.addField(
         'Examples',
         `\`${prefix + command.aliases[0]} ${command.description.examples.join(
-          `\`\n\`${prefix + command.aliases[0]} `
+          `\`\n\`${prefix + command.aliases[0]} `,
         )}\``,
-        true
+        true,
       );
 
     return message.util!.send(embed);

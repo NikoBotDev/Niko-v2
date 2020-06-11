@@ -34,11 +34,11 @@ export default class UserInfoCommand extends Command {
       .addField('ID', member.id, true)
       .addField(
         'Joined At',
-        format(member.joinedAt as Date, 'MM-dd-yyyy HH:mm:ss') || '?'
+        format(member.joinedAt as Date, 'MM-dd-yyyy HH:mm:ss') || '?',
       )
       .addField(
         'Joined Discord',
-        format(member.user.createdTimestamp, 'MM-dd-yyyy HH:mm:ss') || '?'
+        format(member.user.createdTimestamp, 'MM-dd-yyyy HH:mm:ss') || '?',
       )
       .addField(
         'Roles',
@@ -46,7 +46,7 @@ export default class UserInfoCommand extends Command {
           .filter(({ id }) => id !== message.guild!.id)
           .map(({ name }) => name)
           .splice(0, 5)
-          .join('\n')}`
+          .join('\n')}`,
       )
       .addField('Status', member.presence.status);
     if (activities.length > 0) {

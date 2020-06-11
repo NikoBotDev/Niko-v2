@@ -20,13 +20,17 @@ export default class NekoCommand extends Command {
   }
 
   public async exec(message: Message) {
-    const response = await axios.get<NekoAPIResponse>(
-      'https://nekos.life/api/neko'
-    );
-    if (response.status !== 200) return;
-    const embed = new MessageEmbed()
-      .setColor(colors.success)
-      .setImage(response.data.neko);
-    return message.channel.send('', embed);
+    try {
+      const response = await axios.get<NekoAPIResponse>(
+        'https://nekos.life/api/neko',
+      );
+      const embed = new MessageEmbed()
+        .setColor(colors.success)
+        .setImage(response.data.neko);
+      return message.channel.send('', embed);
+    } catch (error) {
+      if (error.response) return null;
+      throw error;
+    }
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { inspect } from 'util';
 import { Message, MessageEmbed } from 'discord.js';
 import escapeRegex from 'escape-string-regexp';
@@ -13,9 +14,16 @@ const fakeToken = 'MzEy0u3zHAr3uDuyNaA3Dr3t.4rd3d;.bruAw9wvn--E8UQWT5aEN8dyYZ0';
 const nlr = '!!NL!!';
 const nlPattern = new RegExp(nlr, 'g');
 
+interface NekoAPIResponse {
+  neko: string;
+}
+
 export default class EvalCommand extends Command {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private lastResult?: any;
+
   private _sensitivePattern?: RegExp;
+
   constructor() {
     super('eval', {
       aliases: ['eval', 'e'],
@@ -41,6 +49,7 @@ export default class EvalCommand extends Command {
   async exec(msg: Message, { script }: { script: string }) {
     script = script.replace('exit', 'process.exit(0)');
     const message = msg;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const client = msg.client as Niko;
     let hrDiff;
     try {
@@ -59,9 +68,9 @@ export default class EvalCommand extends Command {
     const embed = await this.makeResultMessages(
       this.lastResult,
       hrDiff,
-      script
+      script,
     );
-    if (!embed) return;
+    if (!embed) return null;
     const color =
       message.member && message.member.roles.highest.color !== 0
         ? message.member.roles.highest.color
@@ -70,45 +79,61 @@ export default class EvalCommand extends Command {
     return msg.util!.send('', embed);
   }
 
-  async makeResultMessages(result: any, hrDiff: number[], input: string) {
+  async makeResultMessages(result: unknown, hrDiff: number[], input: string) {
     const inspected = inspect(result, { depth: 0 })
       .replace(nlPattern, '\n')
-      .replace(this.sensitivePattern!, fakeToken);
+      .replace(this.sensitivePattern as RegExp, fakeToken);
     if (inspected.length > 1500) {
       console.log(inspected);
-      return;
+      return null;
     }
-    const data = await axios.get('https://nekos.life/api/neko', {
-      responseType: 'json',
-    });
+    let nekoImg = '';
+    try {
+      const response = await axios.get<NekoAPIResponse>(
+        'https://nekos.life/api/neko',
+      );
+
+      nekoImg = response.data.neko;
+    } catch (error) {
+      // ignored
+    }
+
     const embed = new MessageEmbed()
       .setTitle('Evaluated JS')
-      .setThumbnail(data ? data.neko : '')
+      .setThumbnail(nekoImg)
       .setFooter(`Type: ${typeof result}`);
     if (inspected.length >= 1500) {
-      const a = await axios.post('https://pastebin.com/api/api_post.php', {
-        data: this.createFormData(inspected),
-      });
-      embed.setDescription(
-        `:inbox_tray: Input\n\`\`\`javascript\n${input}\n\`\`\`\n:outbox_tray: Output ${
-          hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ''
-        }${
-          hrDiff[1] / 1000000
-        }ms.\n\`\`\`javascript\nOutput is too long and was uploaded to pastebin: ${
-          a ? await a.text() : '[Fail]'
-        }\n\`\`\``
-      );
+      try {
+        const ptbRes = await axios.post(
+          'https://pastebin.com/api/api_post.php',
+          this.createFormData(inspected),
+          {
+            responseType: 'text',
+          },
+        );
+        embed.setDescription(
+          `:inbox_tray: Input\n\`\`\`javascript\n${input}\n\`\`\`\n:outbox_tray: Output ${
+            hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ''
+          }${
+            hrDiff[1] / 1000000
+          }ms.\n\`\`\`javascript\nOutput is too long and was uploaded to pastebin: ${
+            ptbRes.data
+          }\n\`\`\``,
+        );
+      } catch (error) {
+        // ignored
+      }
     } else {
       embed.setDescription(
         `:inbox_tray: Input\n\`\`\`javascript\n${input}\n\`\`\`\n:outbox_tray: Output ${
           hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ''
-        }${hrDiff[1] / 1000000}ms.\n\`\`\`javascript\n${inspected}\n\`\`\``
+        }${hrDiff[1] / 1000000}ms.\n\`\`\`javascript\n${inspected}\n\`\`\``,
       );
     }
     return embed;
   }
 
-  get sensitivePattern() {
+  get sensitivePattern(): RegExp | void {
     if (!this._sensitivePattern) {
       const { client } = this;
       let pattern = '';

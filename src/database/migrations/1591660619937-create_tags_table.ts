@@ -11,7 +11,7 @@ export class createTagsTable1591660619937 implements MigrationInterface {
             type: 'varchar',
             length: '80',
             isPrimary: true,
-            isUnique: false
+            isUnique: false,
           },
           {
             name: 'content',
@@ -34,7 +34,7 @@ export class createTagsTable1591660619937 implements MigrationInterface {
             type: 'datetime',
           },
         ],
-      })
+      }),
     );
 
     await queryRunner.createIndex(
@@ -43,7 +43,7 @@ export class createTagsTable1591660619937 implements MigrationInterface {
         columnNames: ['name', 'guildId'],
         isUnique: true,
         name: 'tag_name_guildId_unique',
-      })
+      }),
     );
   }
 

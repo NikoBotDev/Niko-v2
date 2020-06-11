@@ -20,14 +20,19 @@ export default class CatFactCommand extends Command {
   }
 
   public async exec(message: Message) {
-    const response = await axios.get<CatFactResponse>(
-      'https://catfact.ninja/fact'
-    );
-    if (response.status !== 200) return;
-    const embed = new MessageEmbed()
-      .setColor(colors.success)
-      .setTitle(':cat2: fact')
-      .setDescription(response.data.fact);
-    return message.channel.send('', embed);
+    try {
+      const response = await axios.get<CatFactResponse>(
+        'https://catfact.ninja/fact',
+      );
+
+      const embed = new MessageEmbed()
+        .setColor(colors.success)
+        .setTitle(':cat2: fact')
+        .setDescription(response.data.fact);
+      return message.channel.send('', embed);
+    } catch (error) {
+      if (error.response) return null;
+      throw error;
+    }
   }
 }

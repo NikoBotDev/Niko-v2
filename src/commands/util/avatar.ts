@@ -37,7 +37,7 @@ export default class AvatarCommand extends Command {
         user.displayAvatarURL({
           format: 'png',
           size: 1024,
-        })
+        }),
       );
     return message.util!.send('', embed);
   }

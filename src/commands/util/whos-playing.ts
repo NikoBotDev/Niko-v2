@@ -23,12 +23,12 @@ export default class WhosPlayingCommand extends Command {
   }
 
   public exec(message: Message, { game }: { game: string }) {
-    const members = message.guild?.members.cache.filter((member) =>
-      this.gameFilter(member, game)
+    const members = message.guild?.members.cache.filter(member =>
+      this.gameFilter(member, game),
     );
 
     if (!members) {
-      return;
+      return null;
     }
 
     if (members.size === 0) {
@@ -36,7 +36,7 @@ export default class WhosPlayingCommand extends Command {
     }
 
     const stringArray = members.map(
-      (member) => `**${member.displayName}${member.user.tag}**`
+      member => `**${member.displayName}${member.user.tag}**`,
     );
     const embed = new MessageEmbed()
       .setColor(colors.success)

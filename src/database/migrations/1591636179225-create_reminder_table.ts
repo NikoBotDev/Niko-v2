@@ -35,7 +35,7 @@ export class createReminderTable1591636179225 implements MigrationInterface {
             type: 'datetime',
           },
         ],
-      })
+      }),
     );
   }
 

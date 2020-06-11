@@ -51,7 +51,10 @@ export default class AwwnimeCommand extends Command {
         .setImage(image)
         .setFooter('Powered by Awwnime');
       return message.util!.send(embed);
-    } catch (error) {}
+    } catch (error) {
+      if (error.response) return null;
+      throw error;
+    }
   }
 
   private getUrl(tags: string[]) {

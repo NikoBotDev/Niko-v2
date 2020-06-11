@@ -15,9 +15,13 @@ const { TOKEN, NODE_ENV } = process.env;
 
 class Niko extends AkairoClient {
   public commandHandler: CommandHandler;
+
   public listenerHandler: ListenerHandler;
+
   public inhibitorHandler: InhibitorHandler;
+
   public settings: TypeORMProvider;
+
   constructor() {
     super({
       ownerID: '272070510341259264',
@@ -25,7 +29,8 @@ class Niko extends AkairoClient {
     });
 
     this.commandHandler = new CommandHandler(this, {
-      prefix: (message) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      prefix: _ => {
         return '<';
       },
       commandUtil: true,
@@ -61,7 +66,7 @@ class Niko extends AkairoClient {
     this.listenerHandler.setEmitters({
       commandHandler: this.commandHandler,
       inhibitorHandler: this.inhibitorHandler,
-      listenerHandler: this.listenerHandler
+      listenerHandler: this.listenerHandler,
     });
 
     this.listenerHandler.loadAll();

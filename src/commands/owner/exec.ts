@@ -2,6 +2,8 @@ import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import { exec } from 'child_process';
 
+class BashCodeExecutionError extends Error {}
+
 export default class ExecuteCommand extends Command {
   constructor() {
     super('exec', {
@@ -29,11 +31,11 @@ export default class ExecuteCommand extends Command {
     try {
       const result = await this.executeScript(script);
       return message.channel.send(
-        `➡ Input: \`\`\`${script}\`\`\` \n✅ Output:\n\`\`\`${result}\`\`\``
+        `➡ Input: \`\`\`${script}\`\`\` \n✅ Output:\n\`\`\`${result}\`\`\``,
       );
     } catch (err) {
       return message.channel.send(
-        `➡ Input: \`\`\`${script}\`\`\` \n❌ Output:\n\`\`\`${err}\`\`\``
+        `➡ Input: \`\`\`${script}\`\`\` \n❌ Output:\n\`\`\`${err}\`\`\``,
       );
     }
   }
@@ -41,7 +43,8 @@ export default class ExecuteCommand extends Command {
   executeScript(code: string) {
     return new Promise((resolve, reject) => {
       exec(code, (error, stdout, stderr) => {
-        if (error) reject(`error: ${error}\n\n${stderr}`);
+        if (error)
+          reject(new BashCodeExecutionError(`error: ${error}\n\n${stderr}`));
         resolve(stdout);
       });
     });

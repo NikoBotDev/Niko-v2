@@ -5,6 +5,7 @@ export default class Ping extends Command {
   constructor() {
     super('ping', {
       aliases: ['ping'],
+      category: 'util',
     });
   }
 

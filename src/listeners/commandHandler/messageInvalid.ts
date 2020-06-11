@@ -1,6 +1,7 @@
 import { Listener, PrefixSupplier } from 'discord-akairo';
 import { Message } from 'discord.js';
 import { Tag } from '~/database/entities/Tag';
+
 export default class MessageInvalidListener extends Listener {
   constructor() {
     super('messageInvalid', {
@@ -14,24 +15,26 @@ export default class MessageInvalidListener extends Listener {
 
     const prefix = getPrefix(message) as string;
 
-    if (!message.content.startsWith(prefix)) return;
+    if (!message.content.startsWith(prefix)) return null;
 
     const tag = message.content.slice(1).split(' ')[0];
 
-
     const storedTag = await Tag.findOne({
       where: {
-        name: tag
-      }
+        name: tag,
+      },
     });
 
-    if (!storedTag) return;
+    if (!storedTag) return null;
 
-    await Tag.update({
-      name: tag
-    }, {
-      usages: storedTag.usages + 1
-    });
+    await Tag.update(
+      {
+        name: tag,
+      },
+      {
+        usages: storedTag.usages + 1,
+      },
+    );
 
     return message.channel.send(storedTag.content);
   }

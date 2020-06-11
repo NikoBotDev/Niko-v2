@@ -24,13 +24,13 @@ export default class CommandListCommand extends Command {
               const embed = this.getGroupList();
               message.channel.send(
                 'What group you want to see the commands in?',
-                embed
+                embed,
               );
             },
           },
           type: Argument.validate(
             'lowercase',
-            (_, category) => category !== 'owner'
+            (_, category) => category !== 'owner',
           ),
           default: '',
         },
@@ -40,7 +40,7 @@ export default class CommandListCommand extends Command {
 
   async exec(message: Message, { category }: { category: string }) {
     const { modules } = this.handler;
-    const commands = modules.filter((mdl) => {
+    const commands = modules.filter(mdl => {
       return (
         !dirname(mdl.filepath).includes('subcommands') &&
         this.isAllowed(mdl, category, message)
@@ -54,8 +54,8 @@ export default class CommandListCommand extends Command {
       .setDescription('Command List')
       .addField(
         category,
-        commands.map((mdl) => `${getPrefix(message)}${mdl.id}`).join('\n'),
-        true
+        commands.map(mdl => `${getPrefix(message)}${mdl.id}`).join('\n'),
+        true,
       )
       .setFooter('These are only the commands you are able to use.');
 
@@ -64,8 +64,8 @@ export default class CommandListCommand extends Command {
 
   getGroupList() {
     const categories = this.handler.categories
-      .filter((cat) => cat.id !== 'owner')
-      .map((cat) => `[**${cat.id}**]`);
+      .filter(cat => cat.id !== 'owner')
+      .map(cat => `[**${cat.id}**]`);
 
     const embed = new MessageEmbed()
       .setColor(colors.bot)
@@ -85,7 +85,7 @@ export default class CommandListCommand extends Command {
       if (
         mdl.userPermissions &&
         message.member.permissions.missing(
-          mdl.userPermissions as PermissionResolvable[]
+          mdl.userPermissions as PermissionResolvable[],
         ).length !== 0
       ) {
         return false;

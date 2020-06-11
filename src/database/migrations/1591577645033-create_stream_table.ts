@@ -42,7 +42,7 @@ export class createStreamTable1591577645033 implements MigrationInterface {
           },
         ],
       }),
-      true
+      true,
     );
 
     await queryRunner.createIndex(
@@ -51,7 +51,7 @@ export class createStreamTable1591577645033 implements MigrationInterface {
         name: 'streams_channelId_username',
         isUnique: true,
         columnNames: ['channelId', 'username'],
-      })
+      }),
     );
   }
 

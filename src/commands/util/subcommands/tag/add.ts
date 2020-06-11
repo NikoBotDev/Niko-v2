@@ -1,12 +1,9 @@
-import {
-  Command,
-  Argument
-} from 'discord-akairo';
+import { Command, Argument, PrefixSupplier } from 'discord-akairo';
 import { Message, MessageEmbed } from 'discord.js';
 import { oneLine } from 'common-tags';
-import { Tag } from '~/database/entities/Tag';
 import { QueryFailedError } from 'typeorm';
-import { PrefixSupplier } from 'discord-akairo';
+
+import { Tag } from '~/database/entities/Tag';
 
 import colors from '~/config/colors';
 
@@ -21,22 +18,22 @@ export default class TagAddCommand extends Command {
           type: Argument.validate('string', (_, name) => name.length <= 20),
           prompt: {
             start: 'What will be the tag name?\n',
-            retry: 'Sorry, the name cannot be greater than 20 characters.'
-          }
+            retry: 'Sorry, the name cannot be greater than 20 characters.',
+          },
         },
         {
           id: 'content',
           match: 'rest',
           type: Argument.validate(
             'string',
-            (_, content) => content.length >= 10 && content.length <= 1000
-          )
-        }
-      ]
+            (_, content) => content.length >= 10 && content.length <= 1000,
+          ),
+        },
+      ],
     });
   }
 
-  async exec(message: Message, { name, content }: { [x: string]: string; } ) {
+  async exec(message: Message, { name, content }: { [x: string]: string }) {
     try {
       const { modules } = this.handler;
       if (modules.has(name)) {
@@ -46,9 +43,8 @@ export default class TagAddCommand extends Command {
         name,
         content,
         guildId: message.guild?.id,
-        userId: message.author.id
+        userId: message.author.id,
       });
-
     } catch (err) {
       if (err instanceof QueryFailedError && err.message.includes('UNIQUE')) {
         return message.reply(`A tag with name \`${name}\` already exists`);
@@ -56,12 +52,10 @@ export default class TagAddCommand extends Command {
     }
     const getPrefix = this.handler.prefix as PrefixSupplier;
     const prefix = getPrefix(message);
-    const embed = new MessageEmbed()
-      .setColor(colors.success)
-      .setDescription(
-        oneLine`Successfully created a tag with name **${name}**
-            you can check using \`${prefix}${name}\``
-      );
+    const embed = new MessageEmbed().setColor(colors.success).setDescription(
+      oneLine`Successfully created a tag with name **${name}**
+            you can check using \`${prefix}${name}\``,
+    );
     return message.channel.send(embed);
   }
 }

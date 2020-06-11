@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Provider } from 'discord-akairo';
 import { BaseEntity, getManager, FindOneOptions } from 'typeorm';
 
@@ -7,15 +8,18 @@ interface ProviderOptions {
 }
 
 /**
- * Provider using the `sequelize` library.
+ * Provider using the `typeorm` library.
  */
 export default class TypeORMProvider extends Provider {
   public table: typeof BaseEntity;
+
   public idColumn: string;
+
   public dataColumn: string;
+
   constructor(
     table: typeof BaseEntity,
-    { idColumn = 'id', dataColumn }: ProviderOptions
+    { idColumn = 'id', dataColumn }: ProviderOptions,
   ) {
     super();
 
@@ -43,14 +47,15 @@ export default class TypeORMProvider extends Provider {
     const entityManager = getManager();
 
     const rows = await entityManager.find<{ [x: string]: string } & BaseEntity>(
-      this.table
+      this.table,
     );
-    for (const row of rows) {
+
+    rows.forEach(row =>
       this.items.set(
         row[this.idColumn],
-        this.dataColumn ? JSON.parse(row[this.dataColumn]) : row
-      );
-    }
+        this.dataColumn ? JSON.parse(row[this.dataColumn]) : row,
+      ),
+    );
   }
 
   /**
@@ -60,7 +65,7 @@ export default class TypeORMProvider extends Provider {
    * @param {any} [defaultValue] - Default value if not found or null.
    * @returns {any}
    */
-  get<T>(id: string, key: string, defaultValue?: T): T | undefined {
+  public get<T>(id: string, key: string, defaultValue?: T): T | undefined {
     if (this.items.has(id)) {
       const value = this.items.get(id)[key];
       return value == null ? defaultValue : value;
@@ -76,7 +81,7 @@ export default class TypeORMProvider extends Provider {
    * @param {any} value - The value.
    * @returns {Bluebird<boolean>}
    */
-  set(id: string, key: string, value: any) {
+  public set(id: string, key: string, value: unknown) {
     const data = this.items.get(id) || {};
 
     data[key] = value;
@@ -89,7 +94,7 @@ export default class TypeORMProvider extends Provider {
         },
         {
           [this.dataColumn]: data,
-        }
+        },
       );
     }
 
@@ -99,7 +104,7 @@ export default class TypeORMProvider extends Provider {
       },
       {
         [key]: value,
-      }
+      },
     );
   }
 
@@ -109,7 +114,7 @@ export default class TypeORMProvider extends Provider {
    * @param {string} key - The key to delete.
    * @returns {Bluebird<boolean>}
    */
-  delete(id: string, key: string) {
+  public delete(id: string, key: string) {
     const data = this.items.get(id) || {};
     delete data[key];
 
@@ -120,7 +125,7 @@ export default class TypeORMProvider extends Provider {
         },
         {
           [this.dataColumn]: data,
-        }
+        },
       );
     }
 
@@ -130,7 +135,7 @@ export default class TypeORMProvider extends Provider {
       },
       {
         [key]: null,
-      }
+      },
     );
   }
 
@@ -139,7 +144,7 @@ export default class TypeORMProvider extends Provider {
    * @param {string} id - ID of entry.
    * @returns {Bluebird<void>}
    */
-  clear(id: string) {
+  public clear(id: string) {
     this.items.delete(id);
     const entityManager = getManager();
     return entityManager.delete(this.table, id);
@@ -147,7 +152,7 @@ export default class TypeORMProvider extends Provider {
 
   private async upsert(
     options: FindOneOptions<BaseEntity>,
-    updateOptions: any
+    updateOptions: any,
   ) {
     updateOptions.settings = JSON.stringify(updateOptions.settings);
     const entityManager = getManager();

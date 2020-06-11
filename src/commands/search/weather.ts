@@ -20,7 +20,7 @@ interface WeatherAPIResponse {
       description: string;
       main: string;
       icon: string;
-    }
+    },
   ];
   main: {
     humidity: number;
@@ -36,6 +36,8 @@ interface WeatherAPIResponse {
     lon: number;
   };
 }
+
+class CityNotFoundError extends Error {}
 
 export default class WeatherCommand extends Command {
   constructor() {
@@ -64,6 +66,8 @@ export default class WeatherCommand extends Command {
   public async exec(message: Message, { city }: { city: string }) {
     try {
       const data = await this.getWeather(city);
+
+      if (!data) return null;
       const {
         data: {
           id,
@@ -82,7 +86,7 @@ export default class WeatherCommand extends Command {
         .addField(
           '🌎 Location',
           `[${name}, ${country}](https://openweathermap.org/city/${id})`,
-          true
+          true,
         )
         .addField('🔎 Lat/Lon', `${lat}/${lon}`, true)
         .addField('☁ Condition', weather[0].main, true)
@@ -94,11 +98,14 @@ export default class WeatherCommand extends Command {
         .addField('🌄 Sunrise', sunrise, true)
         .setFooter(
           weather[0].description,
-          `http://openweathermap.org/img/w/${weather[0].icon}.png`
+          `http://openweathermap.org/img/w/${weather[0].icon}.png`,
         );
-      message.util!.send('', embed);
+      return message.channel.send('', embed);
     } catch (err) {
-      console.error(err);
+      if (err instanceof CityNotFoundError) {
+        return message.reply(err.message);
+      }
+      return null;
     }
   }
 
@@ -108,16 +115,20 @@ export default class WeatherCommand extends Command {
       appid: process.env.WEATHER_KEY,
       units: 'metric',
     });
-    const response = await axios.get<WeatherAPIResponse>(
-      `http://api.openweathermap.org/data/2.5/weather?${query}`
-    );
-    if (response.status === 404) {
-      return Promise.reject(`The ${city} cannot be found...`);
-    }
+    try {
+      const response = await axios.get<WeatherAPIResponse>(
+        `http://api.openweathermap.org/data/2.5/weather?${query}`,
+      );
 
-    const sunrise = this.getFormattedTime(response.data.sys.sunrise);
-    const sunset = this.getFormattedTime(response.data.sys.sunset);
-    return { data: response.data, sunrise, sunset };
+      const sunrise = this.getFormattedTime(response.data.sys.sunrise);
+      const sunset = this.getFormattedTime(response.data.sys.sunset);
+      return { data: response.data, sunrise, sunset };
+    } catch (error) {
+      if (error.response.status === 404) {
+        throw new CityNotFoundError(`The ${city} cannot be found...`);
+      }
+      return null;
+    }
   }
 
   private getFormattedTime(time: number) {

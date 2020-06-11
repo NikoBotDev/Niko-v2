@@ -18,17 +18,17 @@ export default class ServerInfoCommand extends Command {
   }
 
   public exec(message: Message) {
-    const guild = message.guild;
+    const { guild } = message;
 
     if (!guild) {
       return;
     }
 
     const { channels } = guild;
-    const textChannels = channels.cache.filter((ch) =>
-      /text|store|news/.test(ch.type)
+    const textChannels = channels.cache.filter(ch =>
+      /text|store|news/.test(ch.type),
     );
-    const voiceChannels = channels.cache.filter((ch) => ch.type === 'voice');
+    const voiceChannels = channels.cache.filter(ch => ch.type === 'voice');
     const createdAt = format(guild.createdAt, 'MM-dd-yyyy HH:mm:ss');
     const emojis = guild.emojis.cache.map(this.formatEmoji);
     const embed = new MessageEmbed()
@@ -47,7 +47,7 @@ export default class ServerInfoCommand extends Command {
       .addField(
         `Emojis(${emojis.length})`,
         emojis.length ? emojis.splice(0, 10).join(' ') : '-',
-        true
+        true,
       );
     message.util!.send(embed);
   }

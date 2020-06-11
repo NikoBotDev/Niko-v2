@@ -1,7 +1,4 @@
-import {
-  Command,
-  Argument
-} from 'discord-akairo';
+import { Command, Argument } from 'discord-akairo';
 import { Message } from 'discord.js';
 import { oneLine } from 'common-tags';
 
@@ -19,8 +16,8 @@ export default class TagCommand extends Command {
           'add hello Hi, i am a bot',
           'remove hello',
           'info hello',
-          'update hello Hi, i am a cool bot'
-        ]
+          'update hello Hi, i am a cool bot',
+        ],
       },
       args: [
         {
@@ -30,34 +27,37 @@ export default class TagCommand extends Command {
           }),
           prompt: {
             start: oneLine`You want to \`update\` \`remove\` or \`add\` a tag?
-                        You can use \`info\` to see informations about a tag\n`
-          }
+                        You can use \`info\` to see informations about a tag\n`,
+          },
         },
         {
           id: 'args',
           match: 'rest',
           prompt: {
-            start: (_: Message, { phrase: type }: { phrase: string; }) => {
+            start: (_: Message, { phrase: type }: { phrase: string }) => {
               const str = 'Alright, please type in a name';
               if (['update', 'add'].includes(type)) {
                 return `${str} and content\n`;
               }
               return str;
-            }
-          }
-        }
-      ]
+            },
+          },
+        },
+      ],
     });
   }
 
-  async exec(message: Message, { type, args }: { type: TagActionType; args: string; }) {
+  async exec(
+    message: Message,
+    { type, args }: { type: TagActionType; args: string },
+  ) {
     const command = this.handler.modules.get(
       {
         add: 'tag-add',
         remove: 'tag-remove',
         info: 'tag-info',
-        update: 'tag-update'
-      }[type]
+        update: 'tag-update',
+      }[type],
     );
     return this.handler.handleDirectCommand(message, args, command!);
   }
