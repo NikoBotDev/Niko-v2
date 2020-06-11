@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --ignore-watch node_modules -T -r tsconfig-paths/register --inspect --respawn src/bot.ts"
+    "dev": "ts-node-dev --ignore-watch node_modules --ignore-watch src/commands --ignore-watch src/database/migrations -T -r tsconfig-paths/register --inspect --respawn src/bot.ts"
   },
   "keywords": [],
   "author": "",
