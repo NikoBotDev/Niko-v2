@@ -7,6 +7,8 @@ import {
 import path from 'path';
 import * as Sentry from '@sentry/node';
 
+import TypeORMProvider from '~/database/providers/TypeORMProvider';
+import { Setting } from '~/database/entities/Setting';
 import sentryConfig from '~/config/sentry';
 
 const { TOKEN, NODE_ENV } = process.env;
@@ -15,6 +17,7 @@ class Niko extends AkairoClient {
   public commandHandler: CommandHandler;
   public listenerHandler: ListenerHandler;
   public inhibitorHandler: InhibitorHandler;
+  public settings: TypeORMProvider;
   constructor() {
     super({
       ownerID: '272070510341259264',
@@ -38,6 +41,11 @@ class Niko extends AkairoClient {
       directory: path.resolve(__dirname, '..', 'inhibitors'),
     });
 
+    this.settings = new TypeORMProvider(Setting, {
+      idColumn: 'guild_id',
+      dataColumn: 'settings',
+    });
+
     if (NODE_ENV !== 'development') {
       Sentry.init(sentryConfig);
     }
@@ -53,6 +61,8 @@ class Niko extends AkairoClient {
     this.listenerHandler.loadAll();
 
     this.inhibitorHandler.loadAll();
+
+    await this.settings.init();
 
     await this.login(TOKEN);
 
