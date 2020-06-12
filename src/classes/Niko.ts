@@ -11,6 +11,8 @@ import TypeORMProvider from '~/database/providers/TypeORMProvider';
 import { Setting } from '~/database/entities/Setting';
 import sentryConfig from '~/config/sentry';
 
+import hexCode from './argumentTypes/hexCode';
+
 const { TOKEN, NODE_ENV } = process.env;
 
 class Niko extends AkairoClient {
@@ -73,11 +75,17 @@ class Niko extends AkairoClient {
 
     this.inhibitorHandler.loadAll();
 
+    this.registerCustomTypes();
+
     await this.settings.init();
 
     await this.login(TOKEN);
 
     console.log('Logged in successfully!!!');
+  }
+
+  private registerCustomTypes() {
+    this.commandHandler.resolver.addType('hexCode', hexCode);
   }
 }
 
