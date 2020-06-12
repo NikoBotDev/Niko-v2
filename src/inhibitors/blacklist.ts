@@ -1,17 +1,21 @@
 import { Inhibitor } from 'discord-akairo';
 import { Message } from 'discord.js';
 
-class BlacklistInhibitor extends Inhibitor {
+export default class BlacklistInhibitor extends Inhibitor {
   constructor() {
     super('blacklist', {
       reason: 'blacklist',
+      type: 'pre',
     });
   }
 
-  exec(message: Message) {
-    const blacklist = ['218321983172983'];
-    return blacklist.includes(message.author.id);
+  public exec(message: Message) {
+    if (message.channel.type === 'dm' && !message.guild) return false;
+    const blacklist = this.client.settings.get<string[]>(
+      message.guild!.id,
+      'blacklist',
+      [],
+    );
+    return blacklist!.includes(message.author!.id);
   }
 }
-
-export default BlacklistInhibitor;
