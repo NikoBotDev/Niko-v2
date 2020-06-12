@@ -1,4 +1,4 @@
-import { createConnection, Connection, MigrationExecutor } from 'typeorm';
+import { createConnection, Connection } from 'typeorm';
 
 class Database {
   public connection?: Connection;
