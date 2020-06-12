@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --ignore-watch node_modules --ignore-watch src/commands --ignore-watch src/database/migrations -T -r tsconfig-paths/register --inspect --respawn src/bot.ts",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts --fix"
   },
   "keywords": [],
   "author": "",
