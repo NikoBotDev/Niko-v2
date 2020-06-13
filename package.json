@@ -12,7 +12,9 @@
   "license": "ISC",
   "devDependencies": {
     "@types/common-tags": "^1.8.0",
+    "@types/ms": "^0.7.31",
     "@types/node": "12.12.6",
+    "@types/uuid": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^3.2.0",
     "@typescript-eslint/parser": "^3.2.0",
     "eslint": "^7.2.0",
@@ -42,8 +44,10 @@
     "dotenv": "^8.2.0",
     "escape-string-regexp": "^4.0.0",
     "form-data": "^3.0.0",
+    "ms": "^2.1.2",
     "querystring": "^0.2.0",
     "sqlite3": "^4.2.0",
-    "typeorm": "^0.2.25"
+    "typeorm": "^0.2.25",
+    "uuid": "^8.1.0"
   }
 }
