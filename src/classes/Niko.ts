@@ -7,8 +7,8 @@ import {
 import path from 'path';
 import * as Sentry from '@sentry/node';
 
+import { Setting } from '@entities/Setting';
 import TypeORMProvider from '~/database/providers/TypeORMProvider';
-import { Setting } from '~/database/entities/Setting';
 import sentryConfig from '~/config/sentry';
 
 import hexCode from './argumentTypes/hexCode';
@@ -16,13 +16,13 @@ import hexCode from './argumentTypes/hexCode';
 const { TOKEN, NODE_ENV } = process.env;
 
 class Niko extends AkairoClient {
-  public commandHandler: CommandHandler;
+  public readonly commandHandler: CommandHandler;
 
-  public listenerHandler: ListenerHandler;
+  public readonly listenerHandler: ListenerHandler;
 
-  public inhibitorHandler: InhibitorHandler;
+  public readonly inhibitorHandler: InhibitorHandler;
 
-  public settings: TypeORMProvider;
+  public readonly settings: TypeORMProvider;
 
   constructor() {
     super({
