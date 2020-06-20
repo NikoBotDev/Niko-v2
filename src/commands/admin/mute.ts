@@ -9,7 +9,7 @@ import {
 import ms from 'ms';
 import formatDistance from 'date-fns/formatDistance';
 import * as uuid from 'uuid';
-import { Mute } from '~/database/entities/Mute';
+import { Mute } from '@entities/Mute';
 
 import colors from '~/config/colors';
 

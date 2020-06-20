@@ -1,6 +1,6 @@
 import { Listener, PrefixSupplier } from 'discord-akairo';
 import { Message } from 'discord.js';
-import { Tag } from '~/database/entities/Tag';
+import { Tag } from '@entities/Tag';
 
 export default class MessageInvalidListener extends Listener {
   constructor() {

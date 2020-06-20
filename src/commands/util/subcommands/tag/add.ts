@@ -3,7 +3,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import { oneLine } from 'common-tags';
 import { QueryFailedError } from 'typeorm';
 
-import { Tag } from '~/database/entities/Tag';
+import { Tag } from '@entities/Tag';
 
 import colors from '~/config/colors';
 
