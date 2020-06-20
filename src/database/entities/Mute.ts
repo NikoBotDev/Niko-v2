@@ -5,7 +5,6 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  PrimaryColumn,
   Unique,
 } from 'typeorm';
 
@@ -15,23 +14,23 @@ type UUIDV4 = string;
   name: 'mutes',
 })
 export class Mute extends BaseEntity {
-  @Column()
-  @PrimaryColumn({
+  @Column('text', {
+    primary: true,
     unique: true,
   })
   id: UUIDV4;
 
-  @Column()
+  @Column('varchar')
   @Unique('userId_guildId_unique', ['userId', 'guildId'])
   userId: string;
 
-  @Column()
+  @Column('varchar')
   modId: string;
 
-  @Column()
+  @Column('varchar')
   guildId: string;
 
-  @Column()
+  @Column('datetime')
   endDate: number;
 
   @CreateDateColumn()

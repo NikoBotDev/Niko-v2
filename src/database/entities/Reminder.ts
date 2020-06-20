@@ -17,23 +17,25 @@ import { Length } from 'class-validator';
   name: 'reminders',
 })
 export class Reminder extends BaseEntity {
-  @Column()
-  @PrimaryColumn({ unique: false })
+  @Column('varchar', {
+    primary: true,
+    unique: false,
+  })
   userId: string;
 
-  @Column()
+  @Column('varchar')
   guildId: string;
 
-  @Column()
+  @Column('varchar')
   channelId: string;
 
-  @Column()
+  @Column('text')
   @Length(10, 1000, {
     message: 'Reminder message must be 10~1000 characters long',
   })
   message: string;
 
-  @Column()
+  @Column('date')
   date: Date;
 
   @CreateDateColumn()

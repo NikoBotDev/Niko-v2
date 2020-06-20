@@ -13,23 +13,26 @@ import { Length } from 'class-validator';
   name: 'tags',
 })
 export class Tag extends BaseEntity {
-  @Column()
-  @PrimaryColumn()
+  @Column('varchar', {
+    length: 80,
+    primary: true,
+    unique: false,
+  })
   @Length(3, 80, {
     message: 'Tag name must be 3~80 characters long',
   })
   name: string;
 
-  @Column()
+  @Column('text')
   content: string;
 
-  @Column()
+  @Column('varchar')
   guildId: string;
 
-  @Column()
+  @Column('varchar')
   userId: string;
 
-  @Column()
+  @Column('int')
   usages: number;
 
   @CreateDateColumn()

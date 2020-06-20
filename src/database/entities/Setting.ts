@@ -1,16 +1,15 @@
 // @ts-nocheck
-import { Entity, BaseEntity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, BaseEntity, Column } from 'typeorm';
 
 @Entity({
   name: 'settings',
 })
 export class Setting extends BaseEntity {
-  @Column()
-  @PrimaryColumn({ unique: true })
+  @Column('varchar', {
+    primary: true,
+  })
   guild_id: string;
 
-  @Column({
-    type: 'text',
-  })
+  @Column('text')
   settings: string;
 }

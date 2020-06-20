@@ -16,28 +16,29 @@ import {
   name: 'streams',
 })
 export class Stream extends BaseEntity {
-  @Column()
-  @PrimaryColumn({ unique: false })
+  @Column('varchar', {
+    primary: true,
+    unique: false,
+  })
   channelId: string;
 
-  @Column()
+  @Column('varchar')
   guildId: string;
 
-  @Column({
+  @Column('text', {
     nullable: true,
-    length: 255,
   })
   message?: string;
 
-  @Column()
+  @Column('varchar')
   username: string;
 
-  @Column({
+  @Column('boolean', {
     default: false,
   })
   streaming: boolean;
 
-  @Column()
+  @Column('date')
   startedAt?: Date;
 
   @CreateDateColumn()
