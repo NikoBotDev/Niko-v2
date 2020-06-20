@@ -43,15 +43,18 @@ export default class SoftBanCommand extends Command {
     });
   }
 
-  async exec(msg: Message, { member, reason }: SoftBanCommandArguments) {
-    if (!msg.guild) return null;
+  async exec(message: Message, { member, reason }: SoftBanCommandArguments) {
+    if (!message.guild) return null;
 
-    if (!member.bannable || !SoftBanCommand.testHierarchy(msg.member, member)) {
+    if (
+      !member.bannable ||
+      !SoftBanCommand.testHierarchy(message.member, member)
+    ) {
       return null;
     }
     await member.ban({ reason, days: 2 });
     setTimeout(() => {
-      msg.guild!.members.unban(member, 'Soft ban timeout');
+      message.guild!.members.unban(member, 'Soft ban timeout');
     }, 4e4);
     const embed = new MessageEmbed()
       .setColor(colors.success)
@@ -61,8 +64,8 @@ export default class SoftBanCommand extends Command {
         `☢ The user **__${member.user.tag}(${member.id})__** has been soft banned!`,
       )
       .addField('Reason', reason)
-      .setFooter(msg.author.tag, msg.author.displayAvatarURL());
-    return msg.channel.send(embed);
+      .setFooter(message.author.tag, message.author.displayAvatarURL());
+    return message.channel.send(embed);
   }
 
   /**
