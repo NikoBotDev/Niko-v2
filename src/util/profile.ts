@@ -79,11 +79,11 @@ async function getImageFor(
       // Add Level
       .setTextFont('30px RbtB')
       .setColor('#333333')
-      .addText(level.toString(), 105, 205)
+      .addText(String(level), 105, 205)
       // Add Rank Data
       .setTextFont('14px RbtB')
       .setColor('#707070')
-      .addText(<string>kFormatter(globalRank), 140, 254)
+      .addText(String(kFormatter(globalRank)), 140, 254)
       .addText('1', 140, 286)
       // Add Coins Amount
       .addText(String(kFormatter(coins, 2)), 369, 253)
