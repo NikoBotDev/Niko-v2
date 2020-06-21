@@ -25,9 +25,10 @@ function getGlobalRank(users: Profile[], userId: string) {
   return globalRank;
 }
 
-// Taken from https://goo.gl/5iqP8v
 /**
- * Format a number as 2.5K if a thousand or more
+ * Format numbers in K format
+ * @reference https://goo.gl/5iqP8v
+ * @example 2500 = 2.5k
  */
 function kFormatter(num: number, decimals = 1) {
   return num > 999 ? `${(num / 1000).toFixed(decimals)}k` : num;
