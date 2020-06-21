@@ -46,7 +46,7 @@ async function getImageFor(
   Canvas.registerFont(fontFile('Roboto.ttf'), { family: 'Roboto' });
   Canvas.registerFont(fontFile('NotoEmoji-Regular.ttf'), { family: 'Roboto' });
   Canvas.registerFont(fontFile('Roboto-Bold.ttf'), { family: 'RbtB' });
-  const client: Niko = msg.client as Niko;
+  const client = msg.client as Niko;
   const users = await rank.getAllUsers();
   // let guildRank = sortRows(client.levels.fetchEverything(), msg);
   // guildRank = guildRank.findIndex((row) => row.userId === user.id);
