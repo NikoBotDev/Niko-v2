@@ -86,7 +86,7 @@ async function getImageFor(
       .addText(<string>kFormatter(globalRank), 140, 254)
       .addText('1', 140, 286)
       // Add Coins Amount
-      .addText(<string>kFormatter(coins, 2), 369, 253)
+      .addText(String(kFormatter(coins, 2)), 369, 253)
       // Add married user tag
       .addText(marryName, 375, 283)
       .save()
