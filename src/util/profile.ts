@@ -148,4 +148,21 @@ async function getImageFor(
   return buffer;
 }
 
-export { getImageFor, getGlobalRank };
+async function findOrMake(whereOption: { userId: string }) {
+  try {
+    const user = await Profile.findOne({
+      where: whereOption,
+    });
+    if (!user) {
+      const { generatedMaps } = await Profile.insert({
+        ...whereOption,
+      });
+      return Profile.create(generatedMaps[0]);
+    }
+
+    return user;
+  } catch (error) {
+    return null;
+  }
+}
+export { getImageFor, getGlobalRank, findOrMake };
