@@ -43,17 +43,17 @@ export default class ProfileCommand extends Command {
     if (!user) {
       const { generatedMaps } = await Profile.createQueryBuilder()
         .insert()
-        .into('profiles', ['userId', 'createdAt', 'updatedAt'])
+        .into('profiles', ['userId', 'createdAt', 'updatedAt', 'daily'])
         .values({
           userId: member.id,
         })
         .execute();
-      user = generatedMaps;
-      user = {
-        ...user,
-        badges: JSON.parse(user.badges),
-      };
+      [user] = generatedMaps;
     }
+    user = {
+      ...user,
+      badges: JSON.parse(user.badges),
+    };
     const image = await profile.getImageFor(user as Profile, member, msg);
     const attachment = new MessageAttachment(
       image,
