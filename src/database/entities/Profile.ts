@@ -50,10 +50,10 @@ export class Profile extends BaseEntity {
   @Column('text', {
     default: "'[]'",
   })
-  badges: string;
+  badges: string[];
 
   @Column('datetime', {
-    default: Date.now(),
+    default: Date.now,
   })
   daily: number;
 
