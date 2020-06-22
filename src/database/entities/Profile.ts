@@ -37,18 +37,25 @@ export class Profile extends BaseEntity {
   })
   coins: number;
 
-  @Column('varchar')
-  married: string;
+  @Column('varchar', {
+    nullable: true,
+  })
+  married: string | null;
 
   @Column('varchar', {
-    default: 'default',
+    default: "'default'",
   })
   profile_bg: string;
 
   @Column('text', {
-    default: '[]',
+    default: "'[]'",
   })
   badges: string;
+
+  @Column('datetime', {
+    default: Date.now(),
+  })
+  daily: number;
 
   @Column('int', {
     default: 0,
