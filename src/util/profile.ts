@@ -39,13 +39,23 @@ function fontFile(name: string): string {
 }
 
 async function getImageFor(
-  { coins, xp, level, userId, profile_bg, married }: Profile,
+  { coins, xp, level, userId, profile_bg, married, badges }: Profile,
   member: GuildMember,
   msg: Message,
 ) {
-  Canvas.registerFont(fontFile('Roboto.ttf'), { family: 'Roboto' });
-  Canvas.registerFont(fontFile('NotoEmoji-Regular.ttf'), { family: 'Roboto' });
-  Canvas.registerFont(fontFile('Roboto-Bold.ttf'), { family: 'RbtB' });
+  Canvas.registerFont(fontFile('Raleway-SemiBold.ttf'), { family: 'Raleway' });
+  Canvas.registerFont(fontFile('NotoEmoji-Regular.ttf'), {
+    family: 'Raleway',
+  });
+  Canvas.registerFont(fontFile('FontAwesome.ttf'), {
+    family: 'Raleway',
+  });
+  Canvas.registerFont(fontFile('arial.ttf'), {
+    family: 'Raleway',
+  });
+  Canvas.registerFont(fontFile('FontAwesome.ttf'), {
+    family: 'Font Awesome',
+  });
   const client = msg.client as Niko;
   const users = await rank.getAllUsers();
   // let guildRank = sortRows(client.levels.fetchEverything(), msg);
@@ -54,11 +64,15 @@ async function getImageFor(
   const marryName = marryUser ? shortName(marryUser.tag) : '';
   const calculated = exp.toNextLevel(level, true) as number;
   const globalRank = rank.getGlobalRank(users, userId);
-  const canvas = new Canvas(520, 318);
-  const barSize = Math.PI * 2 * Math.min(Math.max(0, xp / calculated || 1), 1);
+  const canvas = new Canvas(336, 504);
+  const barSize = Math.min(
+    298 * Math.min(Math.max(0, xp / calculated || 1), 1) + 49,
+    298,
+  );
   const bg = await fs.readFile(
     join(basePath, 'backgrounds', `${profile_bg}.png`),
   );
+  let spacing = 0;
   const response = await axios.get<Buffer>(
     member.user.displayAvatarURL({ format: 'png', size: 1024 }),
     {
@@ -67,47 +81,67 @@ async function getImageFor(
   );
   const generate = async () => {
     canvas
-      .addImage(bg, 0, 0, 520, 318)
+      .addImage(bg, 0, 0, canvas.width, canvas.height)
       .scale(1, 1)
       .setPatternQuality('bilinear')
       .setAntialiasing('subpixel')
       .setTextAlign('left')
       // Add XP Data
-      .setTextFont('15px RbtB')
+      .setTextFont('15px "Raleway"')
       .setColor('#FFFFFF')
-      .addText(`${xp}/${calculated}`, 255, 155)
+      .addText(`${xp}/${calculated}`, canvas.width / 2 - 20, 256)
       // Add Level
-      .setTextFont('30px RbtB')
-      .setColor('#333333')
-      .addText(String(level), 105, 205)
+      .setTextFont('23px "Raleway"')
+      .setColor('#ffffff')
+      .addText(String(level), canvas.width / 2 - 5, 220)
       // Add Rank Data
-      .setTextFont('14px RbtB')
-      .setColor('#707070')
-      .addText(String(kFormatter(globalRank)), 140, 254)
-      .addText('1', 140, 286)
+      .setTextFont('18px "Raleway"')
+      .setColor('#fff')
+      .addText(String(kFormatter(globalRank)), 78, 324)
       // Add Coins Amount
-      .addText(String(kFormatter(coins, 2)), 369, 253)
+      .setTextFont('18px "Raleway"')
+      .addText(String(kFormatter(coins, 2)), 79, 385)
       // Add married user tag
-      .addText(marryName, 375, 283)
+      .setTextFont('15px "Raleway"')
+      .addText(marryName, 76, 443)
+      .setShadowColor('white')
+      .setShadowBlur(8)
+      .setTextFont('17px "Font Awesome"');
+
+    badges.forEach(badge => {
+      const initial = badges.length * 26;
+      canvas.addText(badge, canvas.width - initial + spacing, 30);
+      spacing += 25;
+    });
+    canvas
+      .setShadowBlur(0)
       .save()
       // Draw xp bar
-      .translate(318 / 2, 318 / 2)
-      .rotate((-1 / 2 + 0 / 180) * Math.PI)
       .beginPath()
-      .arc(85, 100, 53, 0, barSize, false)
+      .moveTo(49, 267)
+      .lineTo(barSize, 267)
       .setStroke('#30bae7')
       .setLineCap('round')
-      .setLineWidth(5)
+      .setLineWidth(9)
       .stroke()
-      // Draw the user avatar
       .restore()
       .beginPath()
-      .arc(260, 75, 51, 0, Math.PI * 2, true)
+      .moveTo(49, 267)
+      .arc(barSize, 267, 8, 0, Math.PI * 2, true)
+      .closePath()
+      .setStroke('#fff')
+      .fill()
+      .restore()
+      // Draw the user avatar
+      .beginPath()
+      .arc(168, 123, 51, 0, Math.PI * 2, true)
       .closePath()
       .clip()
       .setShadowBlur(5)
       .setShadowColor('rgba(0, 0, 0, 0.2)')
-      .addImage(response.data, 208, 23, 105, 105);
+      .addImage(response.data, 116, 71, 105, 105)
+      .restore();
+
     return canvas.toBufferAsync();
   };
   const buffer = await generate();
