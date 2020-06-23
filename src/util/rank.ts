@@ -30,11 +30,21 @@ function sortRows(rows: Collection<string, GuildRankingRow>, msg: Message) {
  * Get all users from database
  */
 async function getAllUsers() {
-  const profiles = await Profile.createQueryBuilder()
-    .select('userId, xp, level, coins, married, profile_bg, badges')
-    .orderBy('level', 'DESC')
-    .orderBy('xp', 'DESC')
-    .getMany();
+  const profiles = await Profile.find({
+    select: [
+      'userId',
+      'xp',
+      'level',
+      'coins',
+      'married',
+      'profile_bg',
+      'badges',
+    ],
+    order: {
+      level: 'DESC',
+      xp: 'DESC',
+    },
+  });
   return profiles;
 }
 
