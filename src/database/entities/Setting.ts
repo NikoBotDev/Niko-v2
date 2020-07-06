@@ -1,6 +1,18 @@
 // @ts-nocheck
 import { Entity, BaseEntity, Column } from 'typeorm';
 
+interface Settings {
+  greeting?: {
+    channel: string;
+    message: string;
+  };
+  bye?: {
+    channel: string;
+    message: string;
+  };
+  prefix?: string;
+}
+
 @Entity({
   name: 'settings',
 })
@@ -11,5 +23,5 @@ export class Setting extends BaseEntity {
   guild_id: string;
 
   @Column('json')
-  settings: string;
+  settings: Settings;
 }
