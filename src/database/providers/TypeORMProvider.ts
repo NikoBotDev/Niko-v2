@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Provider } from 'discord-akairo';
-import { BaseEntity, getManager, FindOneOptions, DeepPartial } from 'typeorm';
+import { BaseEntity, FindOneOptions } from 'typeorm';
 import { Settings } from '@entities/Setting';
 
 interface ProviderOptions {
@@ -48,14 +48,9 @@ export default class TypeORMProvider extends Provider {
 
   /**
    * Initializes the provider.
-   * @returns {Bluebird<void>}
    */
   async init() {
-    const entityManager = getManager();
-
-    const rows = await entityManager.find<{ [x: string]: string } & BaseEntity>(
-      this.table,
-    );
+    const rows = await this.table.find<{ [x: string]: string } & BaseEntity>();
 
     rows.forEach(row =>
       this.items.set(
@@ -67,10 +62,6 @@ export default class TypeORMProvider extends Provider {
 
   /**
    * Gets a value.
-   * @param {string} id - ID of entry.
-   * @param {keyof Settings} key - The key to get.
-   * @param {any} [defaultValue] - Default value if not found or null.
-   * @returns {any}
    */
   public get<T>(
     id: string,
@@ -87,10 +78,6 @@ export default class TypeORMProvider extends Provider {
 
   /**
    * Sets a value.
-   * @param {string} id - ID of entry.
-   * @param {string} key - The key to set.
-   * @param {any} value - The value.
-   * @returns {Bluebird<boolean>}
    */
   public set(id: string, key: keyof Settings, value: unknown) {
     const data = this.items.get(id) || {};
@@ -123,9 +110,6 @@ export default class TypeORMProvider extends Provider {
 
   /**
    * Deletes a value.
-   * @param {string} id - ID of entry.
-   * @param {string} key - The key to delete.
-   * @returns {Bluebird<boolean>}
    */
   public delete(id: string, key: keyof Settings) {
     const data = this.items.get(id) || {};
@@ -157,13 +141,10 @@ export default class TypeORMProvider extends Provider {
 
   /**
    * Clears an entry.
-   * @param {string} id - ID of entry.
-   * @returns {Bluebird<void>}
    */
   public clear(id: string) {
     this.items.delete(id);
-    const entityManager = getManager();
-    return entityManager.delete(this.table, id);
+    return this.table.delete(id);
   }
 
   private async upsert(
