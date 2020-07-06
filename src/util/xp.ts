@@ -25,14 +25,12 @@ function getRewardValues() {
   };
 }
 
-function addRewards(user: Profile): Profile {
+function getRewards() {
   const { xp, coins } = getRewardValues();
-  user.xp += xp;
-  user.coins += coins;
-  return user;
+  return { xp, coins };
 }
 
 function getXpRewardForLevel(level: number) {
   return 10 * level;
 }
-export { toNextLevel, getRewardValues, addRewards, getXpRewardForLevel };
+export { toNextLevel, getRewardValues, getRewards, getXpRewardForLevel };
