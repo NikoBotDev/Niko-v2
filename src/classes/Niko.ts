@@ -53,7 +53,7 @@ class Niko extends AkairoClient {
       dataColumn: 'settings',
     });
 
-    if (NODE_ENV !== 'development') {
+    if (NODE_ENV !== 'development' && sentryConfig.dsn) {
       Sentry.init(sentryConfig);
     }
   }
