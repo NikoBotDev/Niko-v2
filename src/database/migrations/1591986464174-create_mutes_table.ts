@@ -26,15 +26,15 @@ export class createMutesTable1591986464174 implements MigrationInterface {
           },
           {
             name: 'endDate',
-            type: 'datetime',
+            type: 'timestamp',
           },
           {
             name: 'createdAt',
-            type: 'datetime',
+            type: 'timestamp',
           },
           {
             name: 'updatedAt',
-            type: 'datetime',
+            type: 'timestamp',
           },
         ],
       }),

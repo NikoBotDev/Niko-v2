@@ -24,15 +24,15 @@ export class createReminderTable1591636179225 implements MigrationInterface {
           },
           {
             name: 'time',
-            type: 'datetime',
+            type: 'timestamp',
           },
           {
             name: 'createdAt',
-            type: 'datetime',
+            type: 'timestamp',
           },
           {
             name: 'updatedAt',
-            type: 'datetime',
+            type: 'timestamp',
           },
         ],
       }),

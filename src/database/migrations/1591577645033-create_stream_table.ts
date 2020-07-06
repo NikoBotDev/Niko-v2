@@ -29,16 +29,16 @@ export class createStreamTable1591577645033 implements MigrationInterface {
           },
           {
             name: 'startedAt',
-            type: 'datetime',
+            type: 'timestamp',
             isNullable: true,
           },
           {
             name: 'createdAt',
-            type: 'datetime',
+            type: 'timestamp',
           },
           {
             name: 'updatedAt',
-            type: 'datetime',
+            type: 'timestamp',
           },
         ],
       }),

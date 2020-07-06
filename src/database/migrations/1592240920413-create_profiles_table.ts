@@ -38,7 +38,7 @@ export class createProfilesTable1592240920413 implements MigrationInterface {
           },
           {
             name: 'badges',
-            type: 'text',
+            type: 'json',
             default: "'[]'",
           },
           {
@@ -48,11 +48,13 @@ export class createProfilesTable1592240920413 implements MigrationInterface {
           },
           {
             name: 'createdAt',
-            type: 'datetime',
+            type: 'timestamp',
+            default: 'NOW()',
           },
           {
             name: 'updatedAt',
-            type: 'datetime',
+            type: 'timestamp',
+            default: 'NOW()',
           },
         ],
       }),

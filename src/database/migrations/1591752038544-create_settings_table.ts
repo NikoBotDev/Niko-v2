@@ -14,7 +14,7 @@ export class createSettingsTable1591752038544 implements MigrationInterface {
           },
           {
             name: 'settings',
-            type: 'text',
+            type: 'json',
           },
         ],
       }),

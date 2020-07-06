@@ -27,11 +27,11 @@ export class createTagsTable1591660619937 implements MigrationInterface {
           },
           {
             name: 'createdAt',
-            type: 'datetime',
+            type: 'timestamp',
           },
           {
             name: 'updatedAt',
-            type: 'datetime',
+            type: 'timestamp',
           },
         ],
       }),
