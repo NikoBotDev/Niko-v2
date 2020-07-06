@@ -7,7 +7,6 @@ import {
   Entity,
   BaseEntity,
   Column,
-  PrimaryColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -35,7 +34,7 @@ export class Reminder extends BaseEntity {
   })
   message: string;
 
-  @Column('date')
+  @Column('timestamp')
   date: Date;
 
   @CreateDateColumn()

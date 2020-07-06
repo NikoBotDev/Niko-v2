@@ -38,7 +38,7 @@ export class Stream extends BaseEntity {
   })
   streaming: boolean;
 
-  @Column('date')
+  @Column('timestamp')
   startedAt?: Date;
 
   @CreateDateColumn()

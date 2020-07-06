@@ -30,8 +30,8 @@ export class Mute extends BaseEntity {
   @Column('varchar')
   guildId: string;
 
-  @Column('datetime')
-  endDate: number;
+  @Column('timestamp')
+  endDate: Date;
 
   @CreateDateColumn()
   createdAt: Date;
