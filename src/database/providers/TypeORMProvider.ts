@@ -14,13 +14,13 @@ interface ProviderOptions {
 export default class TypeORMProvider extends Provider {
   public table: typeof BaseEntity;
 
-  public idColumn: string;
+  public readonly idColumn!: string;
 
-  public dataColumn: string;
+  public readonly dataColumn!: string;
 
   constructor(
     table: typeof BaseEntity,
-    { idColumn = 'id', dataColumn }: ProviderOptions,
+    { idColumn = 'id', dataColumn = 'settings' }: ProviderOptions,
   ) {
     super();
 
@@ -32,12 +32,18 @@ export default class TypeORMProvider extends Provider {
     /**
      * Column for ID.
      */
-    this.idColumn = idColumn;
+    Object.defineProperty(this, 'idColumn', {
+      value: idColumn,
+      writable: false,
+    });
 
     /**
      * Column for JSON data.
      */
-    this.dataColumn = dataColumn;
+    Object.defineProperty(this, 'dataColumn', {
+      value: dataColumn,
+      writable: false,
+    });
   }
 
   /**
