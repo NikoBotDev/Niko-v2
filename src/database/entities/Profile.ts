@@ -8,10 +8,6 @@ import {
   AfterInsert,
 } from 'typeorm';
 
-function parseJSONColumns(row) {
-  row.badges = JSON.parse(row.badges);
-}
-
 @Entity({
   name: 'profiles',
 })
@@ -47,29 +43,28 @@ export class Profile extends BaseEntity {
   })
   profile_bg: string;
 
-  @Column('text', {
-    default: "'[]'",
+  @Column('json', {
+    default: [],
   })
   badges: string[];
 
-  @Column('datetime', {
-    default: Date.now,
+  @Column('timestamp', {
+    default: () => 'NOW()',
   })
-  daily: number;
+  daily: Date;
 
   @Column('int', {
     default: 0,
   })
   streak: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    default: () => 'NOW()',
+  })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    default: () => 'NOW()',
+  })
   updatedAt: Date;
-
-  @AfterInsert()
-  afterInsert() {
-    parseJSONColumns(this);
-  }
 }
