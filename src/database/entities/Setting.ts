@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Entity, BaseEntity, Column } from 'typeorm';
 
-interface Settings {
+export interface Settings {
   greeting?: {
     channel: string;
     message: string;
