@@ -1,10 +1,16 @@
-import { createConnection, Connection } from 'typeorm';
+import { createConnection, Connection, getConnectionOptions } from 'typeorm';
 
 class Database {
   public connection?: Connection;
 
   async init() {
-    this.connection = await createConnection();
+    const connectionOptions = await getConnectionOptions();
+    Object.assign(connectionOptions, {
+      url: process.env.DATABASE_URL,
+      logging: process.env.NODE_ENV === 'development',
+    });
+
+    this.connection = await createConnection(connectionOptions);
     await this.connection.runMigrations();
   }
 }
