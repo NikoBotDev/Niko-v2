@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Provider } from 'discord-akairo';
 import { BaseEntity, FindOneOptions } from 'typeorm';
-import { Settings } from '@entities/Setting';
+import { Settings, Setting } from '@entities/Setting';
 
 interface ProviderOptions {
   idColumn?: string;
@@ -12,14 +12,14 @@ interface ProviderOptions {
  * Provider using the `typeorm` library.
  */
 export default class TypeORMProvider extends Provider {
-  public table: typeof BaseEntity;
+  public table: typeof Setting;
 
   public readonly idColumn!: string;
 
   public readonly dataColumn!: string;
 
   constructor(
-    table: typeof BaseEntity,
+    table: typeof Setting,
     { idColumn = 'id', dataColumn = 'settings' }: ProviderOptions,
   ) {
     super();
@@ -50,7 +50,7 @@ export default class TypeORMProvider extends Provider {
    * Initializes the provider.
    */
   async init() {
-    const rows = await this.table.find<{ [x: string]: string } & BaseEntity>();
+    const rows = await this.table.find<{ [x: string]: string } & Setting>();
 
     rows.forEach(row =>
       this.items.set(
@@ -147,10 +147,7 @@ export default class TypeORMProvider extends Provider {
     return this.table.delete(id);
   }
 
-  private async upsert(
-    options: FindOneOptions<BaseEntity>,
-    updateOptions: any,
-  ) {
+  private async upsert(options: FindOneOptions<Setting>, updateOptions: any) {
     try {
       const insertValues = Object.assign(options, updateOptions);
       this.table
