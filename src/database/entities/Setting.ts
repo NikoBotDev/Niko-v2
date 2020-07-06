@@ -10,6 +10,6 @@ export class Setting extends BaseEntity {
   })
   guild_id: string;
 
-  @Column('text')
+  @Column('json')
   settings: string;
 }
