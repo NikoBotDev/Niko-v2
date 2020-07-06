@@ -175,7 +175,6 @@ export default class TypeORMProvider extends Provider {
             this.dataColumn
           }" = '${JSON.stringify(updateOptions[this.dataColumn])}'`,
         )
-        .returning(this.dataColumn)
         .execute();
 
       return true;
