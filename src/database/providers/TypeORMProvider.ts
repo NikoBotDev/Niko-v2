@@ -154,19 +154,19 @@ export default class TypeORMProvider extends Provider {
     options: FindOneOptions<BaseEntity>,
     updateOptions: any,
   ) {
-    updateOptions.settings = JSON.stringify(updateOptions.settings);
-    const entityManager = getManager();
-
     try {
-      const item = await entityManager.findOne(this.table, options);
-      if (item) {
-        await entityManager.update(this.table, item, updateOptions);
-      } else {
-        await entityManager.insert(this.table, {
-          ...options,
-          ...updateOptions,
-        });
-      }
+      const insertValues = Object.assign(options, updateOptions);
+      this.table
+        .createQueryBuilder()
+        .insert()
+        .values(insertValues)
+        .onConflict(
+          `(${this.idColumn}) DO UPDATE SET "${
+            this.dataColumn
+          }" = '${JSON.stringify(updateOptions[this.dataColumn])}'`,
+        )
+        .returning(this.dataColumn)
+        .execute();
 
       return true;
     } catch (error) {
