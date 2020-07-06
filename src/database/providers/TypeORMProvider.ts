@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Provider } from 'discord-akairo';
-import { BaseEntity, getManager, FindOneOptions } from 'typeorm';
+import { BaseEntity, getManager, FindOneOptions, DeepPartial } from 'typeorm';
+import { Settings } from '@entities/Setting';
 
 interface ProviderOptions {
   idColumn?: string;
@@ -61,11 +62,15 @@ export default class TypeORMProvider extends Provider {
   /**
    * Gets a value.
    * @param {string} id - ID of entry.
-   * @param {string} key - The key to get.
+   * @param {keyof Settings} key - The key to get.
    * @param {any} [defaultValue] - Default value if not found or null.
    * @returns {any}
    */
-  public get<T>(id: string, key: string, defaultValue?: T): T | undefined {
+  public get<T>(
+    id: string,
+    key: keyof Settings,
+    defaultValue?: T,
+  ): T | undefined {
     if (this.items.has(id)) {
       const value = this.items.get(id)[key];
       return value == null ? defaultValue : value;
@@ -81,14 +86,13 @@ export default class TypeORMProvider extends Provider {
    * @param {any} value - The value.
    * @returns {Bluebird<boolean>}
    */
-  public set(id: string, key: string, value: unknown) {
+  public set(id: string, key: keyof Settings, value: unknown) {
     const data = this.items.get(id) || {};
 
     data[key] = value;
-    this.items.set(id, data);
 
     if (this.dataColumn) {
-      return this.upsert(
+      this.upsert(
         {
           [this.idColumn]: id,
         },
@@ -96,16 +100,19 @@ export default class TypeORMProvider extends Provider {
           [this.dataColumn]: data,
         },
       );
+    } else {
+      this.upsert(
+        {
+          [this.idColumn]: id,
+        },
+        {
+          [key]: value,
+        },
+      );
     }
 
-    return this.upsert(
-      {
-        [this.idColumn]: id,
-      },
-      {
-        [key]: value,
-      },
-    );
+    this.items.set(id, data);
+    return true;
   }
 
   /**
@@ -114,12 +121,12 @@ export default class TypeORMProvider extends Provider {
    * @param {string} key - The key to delete.
    * @returns {Bluebird<boolean>}
    */
-  public delete(id: string, key: string) {
+  public delete(id: string, key: keyof Settings) {
     const data = this.items.get(id) || {};
     delete data[key];
 
     if (this.dataColumn) {
-      return this.upsert(
+      this.upsert(
         {
           [this.idColumn]: id,
         },
@@ -127,16 +134,19 @@ export default class TypeORMProvider extends Provider {
           [this.dataColumn]: data,
         },
       );
+    } else {
+      this.upsert(
+        {
+          [this.idColumn]: id,
+        },
+        {
+          [key]: null,
+        },
+      );
     }
 
-    return this.upsert(
-      {
-        [this.idColumn]: id,
-      },
-      {
-        [key]: null,
-      },
-    );
+    this.items.set(id, data);
+    return true;
   }
 
   /**
