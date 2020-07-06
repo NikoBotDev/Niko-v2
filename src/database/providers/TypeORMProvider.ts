@@ -53,7 +53,7 @@ export default class TypeORMProvider extends Provider {
     rows.forEach(row =>
       this.items.set(
         row[this.idColumn],
-        this.dataColumn ? JSON.parse(row[this.dataColumn]) : row,
+        this.dataColumn ? row[this.dataColumn] : row,
       ),
     );
   }
