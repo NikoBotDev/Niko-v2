@@ -31,14 +31,11 @@ export default class ProfileCommand extends Command {
 
     const connection = getConnection();
 
-    let user:
-      | Profile
-      | undefined
-      | ObjectLiteral = await connection
-      .getRepository(Profile)
-      .createQueryBuilder()
-      .where('userId = :id', { id: member.id })
-      .getOne();
+    let user: Profile | ObjectLiteral | undefined = await Profile.findOne({
+      where: {
+        userId: member.id,
+      },
+    });
 
     if (!user) {
       const { generatedMaps } = await Profile.createQueryBuilder()
@@ -50,10 +47,6 @@ export default class ProfileCommand extends Command {
         .execute();
       [user] = generatedMaps;
     }
-    user = {
-      ...user,
-      badges: JSON.parse(user.badges),
-    };
     const image = await profile.getImageFor(user as Profile, member, msg);
     const attachment = new MessageAttachment(
       image,
