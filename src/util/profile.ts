@@ -154,9 +154,14 @@ async function findOrMake(whereOption: { userId: string }) {
       where: whereOption,
     });
     if (!user) {
-      const { generatedMaps } = await Profile.insert({
-        ...whereOption,
-      });
+      const { generatedMaps } = await Profile.createQueryBuilder()
+        .insert()
+        .values({
+          ...whereOption,
+        })
+        .returning('*')
+        .execute();
+
       return Profile.create(generatedMaps[0]);
     }
 
