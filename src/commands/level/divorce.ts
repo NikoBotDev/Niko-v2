@@ -4,6 +4,7 @@ import { oneLine, stripIndent } from 'common-tags';
 
 import { Profile } from '@entities/Profile';
 import { getConnection } from 'typeorm';
+import * as UserService from '~/services/UserService';
 
 export default class DivorceCommand extends Command {
   constructor() {
@@ -31,16 +32,8 @@ export default class DivorceCommand extends Command {
   }
 
   async exec(message: Message, { member }: { member: GuildMember }) {
-    const authorRow = await Profile.findOne({
-      where: {
-        userId: message.author.id,
-      },
-    });
-    const memberRow = await Profile.findOne({
-      where: {
-        userId: member.id,
-      },
-    });
+    const authorRow = await UserService.getProfile(message.author.id);
+    const memberRow = await UserService.getProfile(member.id);
     if (!memberRow || !authorRow) {
       return message.reply(
         oneLine`Sorry, you or the user you mentioned doesn't
